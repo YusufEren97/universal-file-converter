@@ -2,6 +2,10 @@
 
 **English** | [Türkçe](#evrensel-dönüştürücü-universal-converter-)
 
+<p align="center">
+  <img src="screenshot/s1.png" alt="Universal Converter UI" width="700">
+</p>
+
 Secure, fast, and modern file converter powered by **FastAPI** and **Python**.
 Support for **65+ formats** including Image, Video, Audio, Document, and Archives. Everything runs 100% locally on your device.
 

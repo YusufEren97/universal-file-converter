@@ -1,0 +1,433 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --apple-blue: #0071e3;
+    --apple-blue-hover: #0077ed;
+    --apple-gray: #86868b;
+    --apple-light-gray: #f5f5f7;
+    --apple-border: #d2d2d7;
+    --apple-radius: 12px;
+    --apple-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes pulse-subtle {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.85;
+        transform: scale(0.98);
+    }
+}
+
+.animate-pulse-subtle {
+    animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+button,
+select,
+input,
+.glass {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+button:active {
+    transform: scale(0.96) !important;
+}
+
+.glass {
+    background: rgba(30, 30, 30, 0.6) !important;
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.glass:hover {
+    background: rgba(40, 40, 40, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+/* Sadeleştirilmiş Native Select Stilleri */
+select {
+    appearance: auto !important;
+    -webkit-appearance: auto !important;
+    -moz-appearance: auto !important;
+    border-radius: 8px !important;
+    padding: 8px 32px 8px 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    cursor: pointer !important;
+    min-width: 140px !important;
+    font-size: 13px !important;
+}
+
+select option {
+    background: #1c1c1e !important;
+    background-color: #1c1c1e !important;
+    color: #fff !important;
+}
+
+select option:disabled {
+    background: #2a2a2c !important;
+    background-color: #2a2a2c !important;
+    color: #666 !important;
+}
+
+select option:checked,
+select option:hover {
+    background: #0071e3 !important;
+    background-color: #0071e3 !important;
+}
+
+select:focus {
+    outline: none !important;
+    border-color: #0071e3 !important;
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.3) !important;
+}
+
+html.light,
+html.light body {
+    background: #ffffff !important;
+    color: #1d1d1f !important;
+}
+
+html.light select {
+    background-color: #ffffff !important;
+    color: #1d1d1f !important;
+    border-color: #d2d2d7 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.light select option {
+    background-color: #ffffff !important;
+    color: #1d1d1f !important;
+}
+
+html.light header {
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: none !important;
+}
+
+html.light header span {
+    color: #1d1d1f !important;
+}
+
+html.light main {
+    background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%) !important;
+}
+
+html.light .blur-\[128px\] {
+    display: none !important;
+}
+
+html.light #hero-section h1,
+html.light h1.bg-clip-text,
+html.light h1.text-transparent {
+    background: none !important;
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: #1d1d1f !important;
+    color: #1d1d1f !important;
+}
+
+html.light #drop-zone>div {
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%) !important;
+    border: 1px dashed #d2d2d7 !important;
+    border-radius: 20px !important;
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.04),
+        0 0 1px rgba(0, 0, 0, 0.04) !important;
+    transform: translateZ(0);
+}
+
+html.light #drop-zone>div:hover {
+    border-color: #0071e3 !important;
+    background: #fbfbfd !important;
+    box-shadow:
+        0 8px 32px rgba(0, 113, 227, 0.1),
+        0 0 1px rgba(0, 113, 227, 0.2) !important;
+}
+
+html.light #drop-zone h2 {
+    color: #1d1d1f !important;
+}
+
+html.light #drop-zone p {
+    color: #86868b !important;
+}
+
+html.light #drop-zone .bg-white\/5 {
+    background: #f5f5f7 !important;
+    color: #1d1d1f !important;
+}
+
+html.light .glass {
+    background: linear-gradient(180deg, #ffffff 0%, #f9f9fb 100%) !important;
+    border: 1px solid #e5e5ea !important;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        0 4px 16px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+html.light .glass:hover {
+    border-color: #d2d2d7 !important;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 8px 24px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+html.light #processing-area>div {
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%) !important;
+    border: 1px solid #e5e5ea !important;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html.light #processing-area>div:first-child {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 250, 252, 0.95) 100%) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
+    -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.06),
+        0 8px 40px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+html.light * {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.2s ease !important;
+}
+
+html.light button:not(.bg-apple-accent):not(.bg-apple-success) {
+    background: linear-gradient(180deg, #ffffff 0%, #f5f5f7 100%) !important;
+    color: #1d1d1f !important;
+    border: 1px solid #c7c7cc !important;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500 !important;
+}
+
+html.light button:not(.bg-apple-accent):not(.bg-apple-success):hover {
+    background: linear-gradient(180deg, #f5f5f7 0%, #e8e8ed 100%) !important;
+    border-color: #a0a0a5 !important;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+    transform: translateY(-1px);
+}
+
+html.light button:not(.bg-apple-accent):not(.bg-apple-success):active {
+    transform: translateY(0);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.1),
+        inset 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light select {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f8fa 100%) !important;
+    color: #1d1d1f !important;
+    border: 1px solid #c7c7cc !important;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+html.light select:hover {
+    border-color: #0071e3 !important;
+    background: linear-gradient(180deg, #f8f8fa 0%, #f0f0f5 100%) !important;
+    box-shadow:
+        0 4px 16px rgba(0, 113, 227, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+    transform: translateY(-1px);
+}
+
+html.light select:focus {
+    box-shadow:
+        0 0 0 4px rgba(0, 113, 227, 0.15),
+        0 4px 16px rgba(0, 113, 227, 0.1) !important;
+}
+
+html.light select option {
+    background: #ffffff !important;
+    color: #1d1d1f !important;
+    padding: 10px 14px !important;
+}
+
+html.light select option:checked {
+    background: #0071e3 !important;
+    color: #ffffff !important;
+}
+
+html.light select optgroup {
+    background: #f5f5f7 !important;
+    color: #6e6e73 !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+#features-section>div {
+    padding: 24px !important;
+    border-radius: 20px !important;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#features-section>div:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+
+#features-section .text-lg {
+    font-size: 28px !important;
+    margin-bottom: 12px !important;
+    display: inline-block;
+}
+
+html.light #features-section>div {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.04),
+        0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light #features-section>div:hover {
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.08),
+        0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    border-color: transparent !important;
+}
+
+html.light #features-section h3 {
+    color: #1d1d1f !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+}
+
+html.light #features-section p {
+    color: #6e6e73 !important;
+    font-size: 13px !important;
+    line-height: 1.5;
+}
+
+.error-shake {
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+html.light .text-white {
+    color: #1d1d1f !important;
+}
+
+html.light .text-gray-200,
+html.light .text-gray-300 {
+    color: #424245 !important;
+}
+
+html.light .text-gray-400,
+html.light .text-gray-500 {
+    color: #86868b !important;
+}
+
+html.light #toast {
+    background: #ffffff !important;
+    color: #1d1d1f !important;
+    border: 1px solid #d2d2d7 !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+html.light .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.18);
+}
+
+html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+html.light .truncate {
+    color: #1d1d1f !important;
+}
+
+html.light .bg-white\/5.px-2 {
+    background: #f5f5f7 !important;
+    color: #86868b !important;
+}
+
+html.light #theme-toggle {
+    background: #34c759 !important;
+}

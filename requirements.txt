@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+pillow
+pandas
+openpyxl
+PyPDF2
+python-docx
+py7zr
+pillow-heif
+cairosvg

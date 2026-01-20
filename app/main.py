@@ -11,12 +11,29 @@ import os
 import time
 import threading
 from .utils import check_ffmpeg, get_output_dir, clean_filename
-from .converters.images import convert_image
-from .converters.video import convert_media
-from .converters.docs import convert_doc
-from .converters.pdf import convert_pdf
+from .converters import (
+    convert_image,
+    convert_media,
+    convert_doc,
+    convert_pdf,
+    convert_docx,
+    convert_pptx,
+    convert_archive
+)
 from pydantic import BaseModel
 import webbrowser
+
+
+def get_file_extension(filename: str) -> str:
+    """Get file extension, handling double extensions like .tar.gz"""
+    filename_lower = filename.lower()
+    # Check for double extensions first
+    double_exts = ['.tar.gz', '.tar.bz2', '.tar.xz']
+    for ext in double_exts:
+        if filename_lower.endswith(ext):
+            return ext
+    # Otherwise use standard splitext
+    return os.path.splitext(filename)[1].lower()
 
 class ConvertRequest(BaseModel):
     file_path: str
@@ -78,21 +95,25 @@ async def upload_file(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        ext = os.path.splitext(safe_filename)[1].lower()
+        ext = get_file_extension(safe_filename)
         size = os.path.getsize(file_path)
         
         file_type = "unknown"
-        if ext in ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.tiff', '.ico', '.gif', '.heic', '.svg', '.avif']:
+        if ext in ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.tiff', '.tif', '.ico', '.gif', '.heic', '.heif', '.svg', '.avif']:
             file_type = "image"
-        elif ext in ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv', '.wmv', '.m4v']:
+        elif ext in ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv', '.wmv', '.m4v', '.3gp', '.mpeg', '.mpg', '.ts']:
             file_type = "video"
-        elif ext in ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma']:
+        elif ext in ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma', '.aiff', '.opus', '.ac3', '.amr', '.m4r']:
             file_type = "audio"
-        elif ext in ['.csv', '.xlsx', '.xls', '.json', '.txt']:
+        elif ext in ['.csv', '.xlsx', '.xls', '.json', '.xml', '.html', '.txt']:
             file_type = "data"
         elif ext == '.pdf':
             file_type = "pdf"
-        elif ext in ['.zip', '.7z', '.tar', '.gz']:
+        elif ext in ['.docx', '.doc']:
+            file_type = "docx"
+        elif ext in ['.pptx', '.ppt']:
+            file_type = "pptx"
+        elif ext in ['.zip', '.7z', '.tar', '.gz', '.tgz', '.bz2', '.tar.gz', '.tar.bz2', '.tar.xz']:
             file_type = "archive"
 
         return {
@@ -120,7 +141,7 @@ async def startup_event():
     """Open browser on startup and start cleanup thread."""
     def open_browser():
         time.sleep(1.5)
-        webbrowser.open("http://localhost:9999")
+        webbrowser.open("http://localhost:1453")
         
     threading.Thread(target=open_browser, daemon=True).start()
     
@@ -151,25 +172,36 @@ async def api_convert(request: ConvertRequest):
     if not os.path.exists(file_path):
         return {"success": False, "error": f"File not found: {request.file_path}"}
     
-    ext = os.path.splitext(file_path)[1].lower()
+    ext = get_file_extension(os.path.basename(file_path))
     result = {"success": False, "error": "Unknown file type"}
 
     try:
-        if ext in ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.tiff', '.ico', '.gif']:
+        # Image formats
+        if ext in ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.tiff', '.tif', '.ico', '.gif', '.heic', '.heif', '.svg', '.avif']:
             result = await convert_image(file_path, output_dir, request.target_format, request.quality)
-        elif ext in ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv', '.wmv', '.m4v']:
+        # Video formats
+        elif ext in ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv', '.wmv', '.m4v', '.3gp', '.mpeg', '.mpg', '.ts']:
             result = await convert_media(file_path, output_dir, request.target_format, request.quality)
-        elif ext in ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma']:
+        # Audio formats
+        elif ext in ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma', '.aiff', '.opus', '.ac3', '.amr', '.m4r']:
             result = await convert_media(file_path, output_dir, request.target_format, request.quality)
-        elif ext in ['.csv', '.xlsx', '.xls', '.json', '.txt']:
+        # Data formats
+        elif ext in ['.csv', '.xlsx', '.xls', '.json', '.xml', '.html', '.txt']:
             result = await convert_doc(file_path, output_dir, request.target_format)
+        # PDF
         elif ext == '.pdf':
             result = await convert_pdf(file_path, output_dir, request.target_format)
-        elif ext in ['.zip', '.7z', '.tar', '.gz']:
-            from .converters.archive import convert_archive
+        # Word documents
+        elif ext in ['.docx', '.doc']:
+            result = await convert_docx(file_path, output_dir, request.target_format)
+        # PowerPoint
+        elif ext in ['.pptx', '.ppt']:
+            result = await convert_pptx(file_path, output_dir, request.target_format)
+        # Archives
+        elif ext in ['.zip', '.7z', '.tar', '.gz', '.tgz', '.bz2', '.tar.gz', '.tar.bz2', '.tar.xz']:
             result = await convert_archive(file_path, output_dir, request.target_format)
     except Exception as e:
-        result = {"success": False, "error": f"Conversion error: {str(e)}"}
+        result = {"success": False, "error": f"Dönüşüm hatası: {str(e)}"}
     
     return result
 

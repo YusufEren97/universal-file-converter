@@ -1,66 +1,64 @@
 # Changelog
 
-## Version 2.0.0 - December 2025
+All notable changes to Universal Converter will be documented in this file.
 
-### 🎉 Major Release - Complete Redesign
+## [3.0.0] - 2026-01-20
 
-#### ✨ New Features
-- **Multi-language Support**: Full i18n system with 4 languages (EN, TR, DE, ZH)
-- **Batch Processing**: Apply format to all files at once
-- **Progress Tracking**: Visual progress bar for batch conversions
-- **Theme Persistence**: Light/Dark mode saves your preference
-- **Language Persistence**: Your language choice is remembered
-- **Improved Error Handling**: Retry functionality for failed conversions
-- **Native Dropdowns**: Proper dark mode support for all selects
+### 🎨 Major UI/UX Overhaul
+- Complete CSS rewrite with CSS Variables for consistent theming
+- **Light Mode fully fixed** - all elements now visible and styled properly
+- Gradient text headings work correctly in both themes
+- New button system with `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-success`
+- Improved file card design with semantic CSS classes
 
-#### 🎨 UI/UX Improvements
-- Complete glassmorphism redesign
-- Enhanced light mode contrast for better visibility
-- Larger, more accessible buttons (px-5 py-2.5)
-- Better spacing between elements
-- File type icons for visual recognition
-- Smooth animations and transitions
-- Mobile-responsive design improvements
+### 🔧 Technical Improvements
+- Removed inline styles from JavaScript - using CSS classes for theme support
+- Fixed "groups.common" translation issue in batch dropdown
+- Batch dropdown now shows only formats applicable to loaded files
+- Custom select dropdown adapts to light/dark theme automatically
+- Added `addSelectStyles()` function for dynamic CSS injection
 
-#### 🐛 Bug Fixes
-- Fixed duplicate language button initialization
-- Removed obsolete custom select listener
-- Corrected data-i18n handling for nested objects
-- Fixed theme toggle body class override
-- Resolved select dropdown white background in dark mode
-- Fixed missing PDF group translation
-- Corrected removeFile parameter in error cards
-- Fixed goBack cleanup - now properly clears all data
+### 📦 Backend Enhancements
+- All converters refactored with consistent architecture
+- Added `.tar.gz`, `.tar.bz2`, `.tar.xz` support
+- Fixed double extension detection in `main.py`
+- Port changed to 1453
+- PyMuPDF used instead of pdf2image (no Poppler required)
 
-#### 🔧 Technical Improvements
-- Pure DOM manipulation - no global registries
-- Native HTML select elements
-- %100 i18n coverage (93 translation keys)
-- Removed unused code and dependencies
-- Better code organization and comments
-- Enhanced cross-browser compatibility
+### 🌐 New Format Support
+- Video: MOV, WMV, FLV, M4V, 3GP, MPEG, TS
+- Audio: AIFF, OPUS, AC3, AMR, M4R (iPhone ringtone)
+- Image: AVIF, HEIF, TIFF improvements
+- Archive: TAR.GZ, TAR.BZ2, TAR.XZ, TGZ
 
-#### 📚 Documentation
-- Multi-language README (EN/TR/DE/ZH)
-- Comprehensive feature documentation
-- Improved installation guide
-- Project structure documentation
+### 🐛 Bug Fixes
+- Fixed theme toggle not updating select dropdowns
+- Fixed hero title invisible in light mode
+- Fixed batch dropdown showing "groups.common"
+- Fixed file cards not appearing in correct container
 
 ---
 
-## Version 1.1.0 - Legacy
+## [2.0.0] - 2026-01-19
 
-### Features
-- Basic file conversion
-- Support for image, video, audio, documents
-- Simple UI with dark mode
-- Drag & drop functionality
+### ✨ New Features
+- Complete UI redesign with Apple-inspired aesthetics
+- Multi-language support (EN, TR, DE, ZH)
+- Batch processing with progress tracking
+- Theme persistence (Light/Dark mode saved)
+- Drag & drop file upload
+- Enhanced PDF to DOCX conversion with formatting
+- PPTX to PDF/Image conversion
+
+### 🔧 Technical
+- FastAPI backend
+- Async file processing
+- Automatic browser launch on startup
+- File cleanup on shutdown
 
 ---
 
-## Version 1.0.0 - Initial Release
-
-### Features
-- Core conversion functionality
-- Basic file format support
-- Simple web interface
+## [1.0.0] - Initial Release
+- Basic file conversion support
+- Simple UI
+- Image and video conversion

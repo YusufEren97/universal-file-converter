@@ -29,8 +29,8 @@
         "remove": "Kaldır",
         "convertAll": "Hepsini Dönüştür",
         "downloadAll": "Hepsini İndir (ZIP)",
-        "addFile": "+ Dosya Ekle",
-        "back": "← Geri",
+        "addFile": "Dosya Ekle",
+        "back": "Geri",
         "retry": "Tekrar Dene",
         "convertAgain": "Başka Formata Dönüştür"
     },

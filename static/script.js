@@ -265,24 +265,24 @@ async function handleFiles(files) {
 }
 
 function createFileCard(file, id) {
+    const fileCards = document.getElementById('file-cards') || processingArea;
     const card = document.createElement('div');
     card.id = `card-${id}`;
-    card.className = "glass rounded-2xl p-4 flex items-center justify-between transition-all duration-300 animate-pulse-subtle";
+    card.className = "file-card fade-in";
     card.innerHTML = `
-        <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-xl">⏳</div>
-            <div>
-                <h3 class="text-white font-medium text-sm truncate max-w-xs">${file.name}</h3>
-                <p class="text-gray-500 text-xs">${t('status.loading')}</p>
+        <div class="file-info">
+            <div class="file-icon">⏳</div>
+            <div class="file-details">
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${t('status.loading')}</div>
             </div>
         </div>`;
-    processingArea.appendChild(card);
+    fileCards.appendChild(card);
 }
 
 function updateCardWithOptions(id, data) {
     const card = document.getElementById(`card-${id}`);
     if (!card) return;
-    card.classList.remove('animate-pulse-subtle');
 
     // Store data
     fileRegistry.set(id, data.type);
@@ -293,28 +293,29 @@ function updateCardWithOptions(id, data) {
     const icon = getIconForType(data.type);
     const formatOptions = getFormatOptions(data.type);
     const initialFormat = formatOptions[0]?.value || 'txt';
+    const sizeMB = (data.size / 1024 / 1024).toFixed(2);
 
     card.innerHTML = `
-        <div class="flex items-center space-x-4 w-full">
-            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl shadow-inner">${icon}</div>
-            <div class="flex-1">
-                <h3 class="text-white font-medium text-sm truncate max-w-xs">${data.original_name}</h3>
-                <div class="flex items-center space-x-2 mt-1">
-                    <span class="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded text-[10px] uppercase">${data.extension}</span>
-                    <span class="text-gray-600 text-[10px]">${(data.size / 1024 / 1024).toFixed(2)} MB</span>
+        <div class="file-info">
+            <div class="file-icon">${icon}</div>
+            <div class="file-details">
+                <div class="file-name">${data.original_name}</div>
+                <div class="file-size">
+                    <span class="bg-white/10 px-2 py-0.5 rounded text-[10px] uppercase mr-2">${data.extension}</span>
+                    ${sizeMB} MB
                 </div>
             </div>
-            <div class="flex items-center space-x-3" id="actions-${id}">
-                <div class="w-36" id="select-wrapper-${id}"></div>
-                <button onclick="startConversion('${id}', '${data.filename}')" class="px-5 py-2.5 rounded-lg bg-apple-accent hover:bg-blue-600 text-white text-sm font-semibold transition-colors">
-                    ${t('buttons.convert')}
-                </button>
-                <button onclick="removeFile('${id}', '${data.original_name}')" class="p-2.5 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-500 transition-all" title="${t('buttons.remove')}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </button>
-            </div>
         </div>
-        <div id="progress-${id}" class="absolute bottom-0 left-0 h-1 bg-apple-accent transition-all duration-300 w-0 rounded-b-2xl"></div>
+        <div class="file-actions" id="actions-${id}">
+            <div id="select-wrapper-${id}" style="min-width: 140px;"></div>
+            <button onclick="startConversion('${id}', '${data.filename}')" class="btn btn-primary btn-sm">
+                ${t('buttons.convert')}
+            </button>
+            <button onclick="removeFile('${id}', '${data.original_name}')" class="btn btn-icon btn-secondary" title="${t('buttons.remove')}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+        </div>
+        <div id="progress-${id}" class="progress-bar" style="width: 0%;"></div>
     `;
 
     // Render Custom Select
@@ -322,64 +323,72 @@ function updateCardWithOptions(id, data) {
     createCustomSelect(container, id, formatOptions, initialFormat);
 }
 
-// --- Custom Dropdown Implementation ---
-
-// --- Native Dropdown Implementation (v1.1 Revert) ---
+// --- Native Dropdown Implementation (v3.0) ---
 
 function createCustomSelect(container, id, options, initialValue) {
     const select = document.createElement('select');
-    select.className = "w-full border rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-apple-accent transition-all appearance-none cursor-pointer";
-
-    // KÖYLÜ AMA KESİN ÇÖZÜM: Inline styles
-    select.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-    select.style.color = '#ffffff';
-    select.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-    select.style.backgroundImage = `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`;
-    select.style.backgroundPosition = "right 0.5rem center";
-    select.style.backgroundRepeat = "no-repeat";
-    select.style.backgroundSize = "1.5em 1.5em";
-    select.style.paddingRight = "2.5rem";
-
-    let currentGroup = null;
-    let groupEl = null;
+    // Use CSS class instead of inline styles for theme support
+    select.className = "custom-select";
 
     options.forEach(opt => {
-        if (opt.group && opt.group !== currentGroup) {
-            currentGroup = opt.group;
-            groupEl = document.createElement('optgroup');
-            const label = t(`groups.${currentGroup}`) || currentGroup.toUpperCase();
-            groupEl.label = label;
-            // Yumuşak başlık arka planı
-            groupEl.style.backgroundColor = 'rgba(20, 20, 25, 0.98)';
-            groupEl.style.color = '#999999';
-            groupEl.style.fontWeight = 'bold';
-            select.appendChild(groupEl);
-        }
-
         const option = document.createElement('option');
         option.value = opt.value;
         option.textContent = opt.text;
-
-        // Yumuşak arka plan (select ile uyumlu)
-        option.style.backgroundColor = 'rgba(30, 30, 35, 0.95)';
-        option.style.color = '#ffffff';
-        option.style.padding = '8px';
-
         if (opt.value === initialValue) option.selected = true;
-
-        if (groupEl) {
-            groupEl.appendChild(option);
-        } else {
-            select.appendChild(option);
-        }
-    });
-
-    select.addEventListener('change', (e) => {
-        // Native select value is automatically updated
+        select.appendChild(option);
     });
 
     container.innerHTML = '';
     container.appendChild(select);
+
+    // Add custom-select CSS if not exists
+    addSelectStyles();
+}
+
+function addSelectStyles() {
+    if (document.getElementById('custom-select-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'custom-select-styles';
+    style.textContent = `
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 10px 36px 10px 14px;
+            font-size: 13px;
+            font-family: inherit;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+        }
+        .custom-select:hover {
+            background-color: var(--bg-hover);
+            border-color: var(--border-hover);
+        }
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+        }
+        .custom-select option {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 8px;
+        }
+        .custom-select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 
@@ -388,11 +397,24 @@ function initBatchDropdown() {
     const container = document.getElementById('batch-select-container');
     if (!container) return;
 
-    // Generate all options grouped
-    const formats = getAllFormatsGrouped();
-    // Add "Apply All"
-    const allOptions = [{ value: '', text: t('applyAll') }].concat(formats);
+    addSelectStyles();
 
+    // Get formats that are applicable to current files
+    const availableFormats = getAvailableBatchFormats();
+
+    if (availableFormats.length === 0) {
+        // No files or no common formats - show placeholder
+        const select = document.createElement('select');
+        select.className = 'custom-select';
+        select.disabled = true;
+        select.innerHTML = `<option>${t('applyAll') || 'Apply All'}</option>`;
+        container.innerHTML = '';
+        container.appendChild(select);
+        return;
+    }
+
+    // Build options without groups (cleaner)
+    const allOptions = [{ value: '', text: t('applyAll') || 'Apply All' }].concat(availableFormats);
     createCustomSelect(container, 'batch', allOptions, '');
 
     // Add change listener for batch dropdown
@@ -406,24 +428,54 @@ function initBatchDropdown() {
     }
 }
 
+function getAvailableBatchFormats() {
+    // Collect all file types currently loaded
+    const loadedTypes = new Set();
+    fileRegistry.forEach((type) => {
+        loadedTypes.add(type.toLowerCase());
+    });
+
+    if (loadedTypes.size === 0) return [];
+
+    // Find COMMON formats that can be applied to ALL loaded file types
+    let commonFormats = null;
+
+    loadedTypes.forEach(type => {
+        const typeFormats = new Set(getFormatOptions(type).map(f => f.value));
+
+        if (commonFormats === null) {
+            commonFormats = typeFormats;
+        } else {
+            // Intersection: keep only formats that exist in both sets
+            commonFormats = new Set([...commonFormats].filter(f => typeFormats.has(f)));
+        }
+    });
+
+    if (!commonFormats || commonFormats.size === 0) return [];
+
+    // Convert to array - NO GROUP to avoid "groups.common" issue
+    return Array.from(commonFormats).map(f => ({
+        value: f,
+        text: f.toUpperCase()
+    }));
+}
+
 function updateBatchDropdownUI() {
-    // Re-init to update translations
-    const container = document.getElementById('batch-select-container');
-    if (container) {
-        container.innerHTML = ''; // Clear
-        initBatchDropdown();
-    }
+    // Re-init to update based on current files
+    initBatchDropdown();
 }
 
 
 function getFormatOptions(type) {
     // Returns array of {value, text, group}
     const map = {
-        image: ['webp', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'ico', 'avif', 'pdf'],
-        video: ['mp4', 'webm', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'm4v', '3gp', 'mpeg', 'mp3', 'wav', 'gif'],
-        audio: ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a', 'wma', 'aiff', 'opus', 'ac3', 'm4r'],
-        data: ['csv', 'xlsx', 'json', 'txt', 'xml', 'html'],
-        pdf: ['txt', 'docx', 'doc', 'html', 'md', 'rtf'],
+        image: ['webp', 'png', 'jpg', 'gif', 'bmp', 'tiff', 'ico', 'pdf'],
+        video: ['mp4', 'webm', 'avi', 'mkv', 'mov', 'gif', 'mp3', 'wav'],
+        audio: ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a'],
+        data: ['csv', 'xlsx', 'json', 'xml', 'html', 'txt'],
+        pdf: ['docx', 'txt', 'html', 'md', 'png', 'jpg'],
+        docx: ['pdf', 'txt', 'html', 'md'],
+        pptx: ['pdf', 'png', 'jpg', 'txt'],
         archive: ['zip', '7z', 'tar']
     };
 
@@ -431,49 +483,27 @@ function getFormatOptions(type) {
     return list.map(f => ({
         value: f,
         text: f.toUpperCase(),
-        group: type.toLowerCase() // Simple grouping by file type
+        group: type.toLowerCase()
     }));
 }
 
 function getAllFormatsGrouped() {
-    const order = ['image', 'video', 'audio', 'document', 'pdf', 'archive', 'data'];
-    let all = [];
-    order.forEach(type => {
-        // Handle 'document' merging if needed or just use type keys
-        // Since getFormatOptions uses specific keys, let's just iterate
-    });
-
-    // Manual construct for cleaner batch list
-    const groups = [
-        { type: 'image', list: ['webp', 'png', 'jpg', 'gif', 'pdf'] },
-        { type: 'video', list: ['mp4', 'webm', 'avi', 'mkv', 'mp3', 'gif'] },
-        { type: 'audio', list: ['mp3', 'wav', 'aac', 'flac'] },
-        { type: 'document', list: ['pdf', 'docx', 'txt'] },
-        { type: 'archive', list: ['zip', '7z', 'tar'] }
-        // reduced list for batch to avoid clutter, or full list?
-        // Let's use full list but grouped
-    ];
-
-    // Let's use getFormatOptions source
-    const map = {
-        image: ['webp', 'png', 'jpg', 'jpeg', 'gif'],
-        video: ['mp4', 'webm', 'avi', 'mkv'],
-        audio: ['mp3', 'wav'],
-        document: ['pdf', 'docx', 'txt'],
-        archive: ['zip', '7z']
-    };
-    // Flatten
-    let result = [];
-    Object.keys(map).forEach(g => {
-        map[g].forEach(f => {
-            result.push({ value: f, text: f.toUpperCase(), group: g });
-        });
-    });
-    return result;
+    // Only return formats for currently loaded file types
+    return getAvailableBatchFormats();
 }
 
 function getIconForType(type) {
-    const icons = { image: '🖼️', video: '🎬', audio: '🎵', pdf: '📕', document: '📄', archive: '📦', data: '📊' };
+    const icons = {
+        image: '🖼️',
+        video: '🎬',
+        audio: '🎵',
+        pdf: '📕',
+        docx: '📄',
+        pptx: '📊',
+        document: '📄',
+        archive: '📦',
+        data: '📊'
+    };
     return icons[type] || '📁';
 }
 
@@ -499,14 +529,14 @@ async function startConversion(id, filename) {
 
         if (result.success) {
             progressBar.style.width = "100%";
-            progressBar.className = "absolute bottom-0 left-0 h-1 bg-apple-success transition-all duration-300 w-full rounded-b-2xl";
+            progressBar.classList.add('success');
 
             actionsDiv.innerHTML = `
-                <div class="flex items-center space-x-2">
-                     <button onclick="resetCard('${id}', '${filename}')" class="p-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors" title="${t('buttons.convertAgain')}">
-                        <svg class="w-5 h-5 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetCard('${id}', '${filename}')" class="btn btn-secondary btn-icon" title="${t('buttons.convertAgain')}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     </button>
-                    <a href="/api/download/${result.filename}" download class="px-4 py-2.5 rounded-lg bg-apple-success hover:bg-green-600 text-white text-sm font-semibold inline-flex items-center space-x-2">
+                    <a href="/api/download/${result.filename}" download class="btn btn-success btn-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         <span>${t('buttons.download')}</span>
                     </a>
@@ -519,10 +549,10 @@ async function startConversion(id, filename) {
         actionsDiv.innerHTML = `
             <div class="flex flex-col items-end gap-2">
                 <span class="text-xs text-red-500 font-medium">${e.message || t('toasts.error')}</span>
-                <button onclick="resetCard('${id}', '${filename}')" class="px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg border border-white/10 hover:bg-white/20 transition-colors">${t('buttons.retry')}</button>
+                <button onclick="resetCard('${id}', '${filename}')" class="btn btn-secondary btn-sm">${t('buttons.retry')}</button>
             </div>`;
         progressBar.style.width = "100%";
-        progressBar.className = "absolute bottom-0 left-0 h-1 bg-red-500 transition-all duration-300 w-full rounded-b-2xl";
+        progressBar.classList.add('error');
         triggerShake(`card-${id}`);
     }
 }
@@ -556,9 +586,12 @@ function removeFile(id, originalName) {
 // --- Utils ---
 function showToast(msg) {
     const toast = document.getElementById('toast');
-    document.getElementById('toast-message').textContent = msg;
-    toast.classList.remove('translate-y-24', 'opacity-0');
-    setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
+    const toastMessage = document.getElementById('toast-message');
+    if (toast && toastMessage) {
+        toastMessage.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
 }
 
 function updateCardError(id, msg) {
@@ -566,9 +599,11 @@ function updateCardError(id, msg) {
     const data = fileDataStore.get(id);
     const originalName = data?.original_name || '';
 
-    card.className = "glass rounded-2xl p-4 flex items-center justify-between border border-red-500 bg-red-500/5";
-    card.innerHTML = `<span class="text-red-500 text-sm">⚠️ ${msg}</span> <button onclick="removeFile('${id}', '${originalName}')" class="text-white">✕</button>`;
-    triggerShake(`card-${id}`);
+    card.className = "file-card error-shake";
+    card.style.borderColor = 'var(--danger)';
+    card.innerHTML = `
+        <span class="text-red-500 text-sm">⚠️ ${msg}</span>
+        <button onclick="removeFile('${id}', '${originalName}')" class="btn btn-icon btn-secondary">✕</button>`;
 }
 
 function triggerShake(elementId) {

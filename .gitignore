@@ -23,9 +23,9 @@ converted_files/
 .DS_Store
 Thumbs.db
 Desktop.ini
-
 .vscode/
 *.code-workspace
 
 # Legacy Versions
 v1.1_Legacy/
+v2.0_Legacy/

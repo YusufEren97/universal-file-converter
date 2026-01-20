@@ -28,21 +28,21 @@ echo   Starting Server
 echo ===================================================
 echo.
 
-:: Python Check
-echo [CHECK] Checking Python...
-python --version >nul 2>&1
+:: Python 3.12 Check
+echo [CHECK] Checking Python 3.12...
+py -3.12 --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ERROR] Python not found!
-    echo Download Python 3.9+ from python.org
+    echo [ERROR] Python 3.12 not found!
+    echo Download Python 3.12 from python.org
     pause
     goto MENU
 )
-echo [OK] Python found
+echo [OK] Python 3.12 found
 
 :: Check requirements
 if not exist ".installed" (
     echo [INFO] Installing dependencies...
-    pip install -r requirements.txt
+    py -3.12 -m pip install -r requirements.txt
     if %errorlevel% equ 0 (
         echo OK > .installed
         echo [OK] Dependencies installed
@@ -54,14 +54,14 @@ if not exist ".installed" (
 )
 
 echo.
-echo [INFO] Starting server on port 9999...
+echo [INFO] Starting server on port 1453...
 echo [INFO] Browser will open automatically
 echo.
 echo Press Ctrl+C to stop
 echo ===================================================
 echo.
 
-python -m uvicorn app.main:app --port 9999
+py -3.12 -m uvicorn app.main:app --port 1453
 
 if %errorlevel% neq 0 (
     echo.

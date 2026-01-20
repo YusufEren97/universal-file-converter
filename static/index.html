@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Converter</title>
+    <meta name="description"
+        content="Universal Converter V3 - Convert any file format locally. Fast, secure, and private.">
+    <meta name="theme-color" content="#000000">
+    <title>Universal Converter V3</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,193 +17,187 @@
             theme: {
                 extend: {
                     colors: {
-                        apple: {
-                            gray: '#1c1c1e',
-                            dark: '#000000',
-                            accent: '#0a84ff',
-                            success: '#32d74b',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        accent: '#0a84ff',
+                        success: '#32d74b',
+                        danger: '#ff453a'
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
-<body
-    class="bg-black text-gray-200 font-sans antialiased h-screen flex flex-col overflow-hidden selection:bg-apple-accent selection:text-white">
+<body>
+    <!-- Background Effects -->
+    <div class="bg-effects">
+        <div class="bg-blur bg-blur-1"></div>
+        <div class="bg-blur bg-blur-2"></div>
+    </div>
 
-    <header
-        class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 p-4 transition-all duration-300">
-        <div class="max-w-5xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                <span class="ml-4 font-semibold text-sm tracking-wide text-white dark:text-white opacity-90"
-                    data-i18n="title">Universal Converter</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div id="language-selector"
-                    class="flex items-center p-0.5 rounded-md bg-white/10 border border-white/5 mx-2">
-                    <!-- Dynamic language buttons populated by initLanguages() -->
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="traffic-lights">
+                    <div class="traffic-light red"></div>
+                    <div class="traffic-light yellow"></div>
+                    <div class="traffic-light green"></div>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <span class="text-xs text-gray-400">🌙</span>
-                    <div id="theme-toggle" onclick="toggleTheme()"
-                        class="w-12 h-6 bg-gray-600 rounded-full relative cursor-pointer transition-colors duration-300">
-                        <div id="toggle-knob"
-                            class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300">
-                        </div>
+                <span class="header-title" data-i18n="title">Universal Converter</span>
+            </div>
+
+            <div class="header-right">
+                <!-- Language Selector -->
+                <div id="language-selector" class="lang-selector">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Theme Toggle -->
+                <div class="theme-toggle">
+                    <span>🌙</span>
+                    <div id="theme-toggle" class="toggle-switch" onclick="toggleTheme()">
+                        <div id="toggle-knob" class="toggle-knob"></div>
                     </div>
-                    <span class="text-xs text-gray-400">☀️</span>
+                    <span>☀️</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 flex flex-col items-center justify-center p-6 relative w-full h-full pt-16">
+    <!-- Main Content -->
+    <main class="main-content">
 
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[128px] pointer-events-none">
-        </div>
-        <div
-            class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[128px] pointer-events-none">
-        </div>
+        <!-- Hero Section -->
+        <section id="hero-section" class="hero">
+            <h1 data-i18n="heroTitle">Convert Anything ⚡</h1>
+            <p data-i18n="heroSubtitle">Secure, Fast and Modern. Your files never leave your device.</p>
+        </section>
 
-        <div id="hero-section" class="z-20 text-center mb-6 w-full max-w-2xl">
-            <h1 data-i18n="heroTitle"
-                class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 mb-4 tracking-tight">
-                Convert Anything ⚡
-            </h1>
-            <p data-i18n="heroSubtitle" class="text-gray-400 text-sm md:text-base font-light px-4 mb-4">Secure, Fast
-                and Modern. Your files never leave your device.</p>
-        </div>
-
-        <div id="drop-zone"
-            class="relative z-10 w-full max-w-2xl text-center group transition-all duration-500 transform hover:scale-[1.01]">
-
-            <div
-                class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm -z-10">
+        <!-- Drop Zone -->
+        <div id="drop-zone" class="drop-zone" onclick="document.getElementById('file-input').click()">
+            <div class="drop-zone-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    style="color: var(--text-secondary)">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
             </div>
-
-            <div class="border-2 border-dashed border-white/20 bg-white/5 backdrop-blur-xl rounded-3xl p-12 md:p-16 flex flex-col items-center justify-center transition-all duration-300 cursor-pointer group-hover:border-apple-accent/50 group-hover:bg-white/10"
-                onclick="document.getElementById('file-input').click()">
-
-                <div
-                    class="mb-6 w-20 h-20 rounded-full bg-white/10 flex items-center justify-center shadow-2xl ring-1 ring-white/20 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-10 h-10 text-gray-300 transform group-hover:-translate-y-1 transition-transform duration-300"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                        </path>
-                    </svg>
-                </div>
-
-                <h2 class="text-2xl font-medium text-white mb-2 tracking-tight" data-i18n="dropText">Drop Files Here
-                </h2>
-                <p class="text-gray-400 text-sm font-light" data-i18n="browseText">or click to browse</p>
-                <div class="flex gap-2 mt-4 text-[10px] text-gray-500 font-mono uppercase tracking-widest">
-                    <span class="bg-white/5 px-2 py-1 rounded">JPG</span>
-                    <span class="bg-white/5 px-2 py-1 rounded">PNG</span>
-                    <span class="bg-white/5 px-2 py-1 rounded">MP4</span>
-                    <span class="bg-white/5 px-2 py-1 rounded">PDF</span>
-                </div>
-
-                <input type="file" id="file-input" class="hidden" multiple onchange="handleFiles(this.files)">
+            <h2 data-i18n="dropText">Drop Files Here</h2>
+            <p data-i18n="browseText">or click to browse</p>
+            <div class="format-badges">
+                <span class="format-badge">JPG</span>
+                <span class="format-badge">PNG</span>
+                <span class="format-badge">MP4</span>
+                <span class="format-badge">PDF</span>
+                <span class="format-badge">DOCX</span>
+                <span class="format-badge">ZIP</span>
             </div>
+            <input type="file" id="file-input" class="hidden" multiple onchange="handleFiles(this.files)">
         </div>
 
-        <div id="processing-area" class="hidden w-full max-w-4xl mt-4 space-y-3 z-20 pb-8 overflow-y-auto max-h-[85vh]">
+        <!-- Processing Area -->
+        <div id="processing-area" class="processing-area hidden">
 
-            <div
-                class="flex items-center justify-between bg-white/5 border border-white/10 p-3 rounded-xl backdrop-blur-md mb-4 sticky top-0 z-30 gap-2">
-                <div class="flex space-x-2">
-                    <button onclick="goBack()"
-                        class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/10">
-                        <span data-i18n="buttons.back">← Back</span>
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <button onclick="goBack()" class="btn btn-secondary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        <span data-i18n="buttons.back">Back</span>
                     </button>
-                    <button onclick="document.getElementById('file-input').click()"
-                        class="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/10">
-                        <span data-i18n="buttons.addFile">+ Add File</span>
+                    <button onclick="document.getElementById('file-input').click()" class="btn btn-secondary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span data-i18n="buttons.addFile">Add File</span>
                     </button>
-                    <div id="batch-select-container" class="w-44 relative ml-2">
-                        <!-- Native Batch Select -->
+                    <div id="batch-select-container" style="min-width: 160px;">
+                        <!-- Batch dropdown -->
                     </div>
-
                 </div>
 
-                <!-- Batch Progress Bar -->
-                <div id="batch-progress" class="hidden flex-1 mx-4 flex items-center space-x-3">
-                    <div class="flex-1 bg-white/10 rounded-full h-2 overflow-hidden">
-                        <div id="batch-progress-bar"
-                            class="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-500 rounded-full"
-                            style="width: 0%"></div>
+                <!-- Progress -->
+                <div id="batch-progress" class="batch-progress hidden">
+                    <div class="progress-track">
+                        <div id="batch-progress-bar" class="progress-fill" style="width: 0%"></div>
                     </div>
-                    <span id="batch-progress-text" class="text-xs text-white font-medium whitespace-nowrap">0/0</span>
+                    <span id="batch-progress-text" class="progress-text">0/0</span>
                 </div>
 
-                <span id="conversion-counter" class="text-xs text-gray-500 hidden">0/0</span>
-                <div class="flex space-x-2">
-                    <button onclick="downloadAll()" id="btn-download-all"
-                        class="hidden px-5 py-2.5 bg-apple-success hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-green-500/20">
-                        <span data-i18n="buttons.downloadAll">Download All (ZIP)</span>
+                <div class="toolbar-right">
+                    <button onclick="downloadAll()" id="btn-download-all" class="btn btn-success btn-sm hidden">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span data-i18n="buttons.downloadAll">Download All</span>
                     </button>
-                    <button onclick="convertAll()"
-                        class="px-5 py-2.5 bg-apple-accent hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-blue-500/20">
+                    <button onclick="convertAll()" class="btn btn-primary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
                         <span data-i18n="buttons.convertAll">Convert All</span>
                     </button>
                 </div>
             </div>
 
+            <!-- File Cards -->
+            <div id="file-cards" class="file-cards">
+                <!-- Cards inserted by JS -->
+            </div>
+
         </div>
 
-        <div id="features-section"
-            class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl text-left z-10 transition-all duration-300">
-            <div>
-                <div class="flex items-center space-x-2 mb-1">
-                    <span class="text-lg">📂</span>
-                    <h3 class="text-white font-medium text-sm" data-i18n="features.formats.title">65+ Formats</h3>
-                </div>
-                <p class="text-gray-500 text-xs" data-i18n="features.formats.desc">Image, Video, Audio, Doc, Archive.
-                </p>
+        <!-- Features -->
+        <section id="features-section" class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📂</div>
+                <h3 data-i18n="features.formats.title">65+ Formats</h3>
+                <p data-i18n="features.formats.desc">Image, Video, Audio, Doc, Archive.</p>
             </div>
-            <div>
-                <div class="flex items-center space-x-2 mb-1">
-                    <span class="text-lg">⚡</span>
-                    <h3 class="text-white font-medium text-sm" data-i18n="features.fast.title">Lightning Fast</h3>
-                </div>
-                <p class="text-gray-500 text-xs" data-i18n="features.fast.desc">GPU accelerated conversion.</p>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 data-i18n="features.fast.title">Lightning Fast</h3>
+                <p data-i18n="features.fast.desc">GPU accelerated conversion.</p>
             </div>
-            <div>
-                <div class="flex items-center space-x-2 mb-1">
-                    <span class="text-lg">🛡️</span>
-                    <h3 class="text-white font-medium text-sm" data-i18n="features.private.title">Privacy First</h3>
-                </div>
-                <p class="text-gray-500 text-xs" data-i18n="features.private.desc">100% local, files stay with you.</p>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3 data-i18n="features.private.title">Privacy First</h3>
+                <p data-i18n="features.private.desc">100% local, files stay with you.</p>
             </div>
-            <div>
-                <div class="flex items-center space-x-2 mb-1">
-                    <span class="text-lg">✨</span>
-                    <h3 class="text-white font-medium text-sm" data-i18n="features.premium.title">Premium Quality</h3>
-                </div>
-                <p class="text-gray-500 text-xs" data-i18n="features.premium.desc">Optimized without quality loss.</p>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3 data-i18n="features.premium.title">Premium Quality</h3>
+                <p data-i18n="features.premium.desc">Optimized without quality loss.</p>
             </div>
-        </div>
+        </section>
+
     </main>
 
-    <div id="toast"
-        class="fixed bottom-8 right-8 bg-apple-gray border border-white/10 text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-3 backdrop-blur-xl">
-        <svg class="w-6 h-6 text-apple-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
         </svg>
-        <span id="toast-message" class="font-medium text-sm">Operation completed</span>
+        <span id="toast-message" class="toast-message">Operation completed</span>
     </div>
 
+    <!-- Scripts -->
     <script src="/static/script.js"></script>
 </body>
 

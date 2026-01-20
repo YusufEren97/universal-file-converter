@@ -29,8 +29,8 @@
         "remove": "Remove",
         "convertAll": "Convert All",
         "downloadAll": "Download All (ZIP)",
-        "addFile": "+ Add File",
-        "back": "← Back",
+        "addFile": "Add File",
+        "back": "Back",
         "retry": "Retry",
         "convertAgain": "Convert Another Format"
     },

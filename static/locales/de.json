@@ -29,8 +29,8 @@
         "remove": "Entfernen",
         "convertAll": "Alle Konvertieren",
         "downloadAll": "Alles Herunterladen (ZIP)",
-        "addFile": "+ Datei hinzufügen",
-        "back": "← Zurück",
+        "addFile": "Datei hinzufügen",
+        "back": "Zurück",
         "retry": "Wiederholen",
         "convertAgain": "Anderes Format konvertieren"
     },

@@ -29,8 +29,8 @@
         "remove": "移除",
         "convertAll": "全部转换",
         "downloadAll": "全部下载 (ZIP)",
-        "addFile": "+ 添加文件",
-        "back": "← 返回",
+        "addFile": "添加文件",
+        "back": "返回",
         "retry": "重试",
         "convertAgain": "转换其他格式"
     },
